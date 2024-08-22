@@ -23,17 +23,13 @@ import java.awt.event.ActionEvent;
 public class WordscapesBot {
 
 	private JFrame frame;
-	private static JTextField fourth;
-	private static JTextField fifth;
-	private static JTextField sixth;
 	private JLabel word;
 	private JLabel lblNewLabel_1;
-	private static JTextField third;
-	private static JTextField second;
-	private static JTextField first;
 	private JButton btnClear, next, back;
 	private JRadioButton noDup;
 	private int i;
+	private static JTextField first, second, third, fourth, fifth, sixth;
+	private static JTextField[] fields;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -48,11 +44,10 @@ public class WordscapesBot {
 			}
 		});
 	}
-	public WordscapesBot() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public WordscapesBot(){
 		initialize();
 	}
-	private void initialize() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-		//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	private void initialize(){
 		FlatMacLightLaf.setup();
 		
 		frame = new JFrame();
@@ -133,14 +128,15 @@ public class WordscapesBot {
 		sixth.setColumns(10);
 		sixth.setBounds(215, 173, 50, 80);
 		frame.getContentPane().add(sixth);
-		
+
+		fields = new JTextField[]{first, second, third, fourth, fifth, sixth};
         ArrayList<String> words = new ArrayList<>();
 		
 		JButton generate = new JButton("Generate");
 		generate.setFont(new Font("Tilt Neon", Font.PLAIN, 25));
 		generate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		        String filePath = "C:\\Users\\Manish\\eclipse-workspace\\WordscapesBot\\src\\dictionary.txt";
+		        String filePath = "src\\dictionary.txt";
 		        try {
 		        	words.clear();
 		        	next.setEnabled(true);
@@ -176,12 +172,10 @@ public class WordscapesBot {
 		btnClear = new JButton("Clear");
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				first.setText(null);
-				second.setText(null);
-				third.setText(null);
-				fourth.setText(null);
-				fifth.setText(null);
-				sixth.setText(null);
+				for(JTextField field : fields){
+					field.setText(null);
+				}
+
 				word.setText("Word");
 				i = 0;
 				words.clear();
@@ -204,7 +198,7 @@ public class WordscapesBot {
 					next.setEnabled(false);
 				}
 				else {
-					i+=1;
+					i++;
 					back.setEnabled(true);
 					next.setEnabled(true);
 					word.setText(words.get(i));
@@ -228,7 +222,7 @@ public class WordscapesBot {
 				else {
 					back.setEnabled(true);
 					next.setEnabled(true);
-					i-=1;
+					i--;
 					word.setText(words.get(i));
 					
 					if(i == 0){
@@ -245,7 +239,7 @@ public class WordscapesBot {
    public boolean generate(String word, int usual, int special) {
         String lowercaseWord = word.toLowerCase();
         
-        if (noDup.isSelected() == true) {
+        if (noDup.isSelected()) {
         return lowercaseWord.matches("[" + first.getText() + second.getText() + third.getText() + fourth.getText() + fifth.getText() + sixth.getText() + "-]*") &&
                 lowercaseWord.chars().filter(ch -> ch == first.getText().charAt(0)).count() <= usual &&
                 lowercaseWord.chars().filter(ch -> ch == second.getText().charAt(0)).count() <= usual &&
